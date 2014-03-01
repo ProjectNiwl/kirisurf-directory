@@ -166,14 +166,12 @@ func ReadKeys() {
 }
 
 func main() {
-	fmt.Println(0 % 2)
-	go RandomizeDirectory()
 	ReadKeys()
 	http.HandleFunc("/read", ReadDirectoryHandler)
 	http.HandleFunc("/longpoll", LPDirectoryHandler)
 	http.HandleFunc("/rformat", RFormatDirectoryHandler)
 	http.HandleFunc("/upload", UploadInfoHandler)
-	err := http.ListenAndServe(":12345", nil)
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic("ListenAndServe")
 	}

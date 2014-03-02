@@ -71,7 +71,7 @@ func UploadInfoHandler(w http.ResponseWriter, req *http.Request) {
 	theirport := req.Form.Get("port")
 	theirprotocol := req.Form.Get("protocol")
 	theirpkey := req.Form.Get("keyhash")
-	theirhost := strings.Join([]string{rhost, theirport}, "")
+	theirhost := strings.Join([]string{rhost, theirport}, ":")
 	realprotoc, err := strconv.Atoi(theirprotocol)
 	if err != nil {
 		fmt.Fprintf(w, "Error encountered while uploading info:\n%s\n", err.Error())

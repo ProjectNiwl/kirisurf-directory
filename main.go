@@ -13,6 +13,7 @@ import (
 
 	"code.google.com/p/go.crypto/openpgp"
 	"code.google.com/p/go.crypto/openpgp/packet"
+	"code.google.com/p/log4go"
 )
 
 var revnum = 0
@@ -53,6 +54,7 @@ func GetAdjacentNodes(addr string) []int {
 
 // Add a node to the database
 func AddNode(addr string, pkey string, pvers int) {
+	log4go.Info("Adding %s with pkey %s and pvers %d", addr, pkey, pvers)
 	DLock.Lock()
 	defer func() {
 		DLock.Unlock()

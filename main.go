@@ -75,8 +75,9 @@ func AddNode(addr string, pkey string, pvers int) {
 			nd.Adjacents = append(nd.Adjacents, i)
 		}
 	}
-	for _, ele := range KDirectory {
-		ele.Adjacents = FixDuplicates(ele.Adjacents)
+	for i := 0; i < len(KDirectory); i++ {
+		nd := &KDirectory[i]
+		nd.Adjacents = FixDuplicates(nd.Adjacents)
 	}
 }
 

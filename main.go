@@ -115,6 +115,7 @@ func DeleteNode(idx int) {
 
 // Fixes duplicates
 func FixDuplicates(thing []int) []int {
+	log4go.Debug(thing)
 	toret := make([]int, 0)
 	for i := 0; i < len(thing); i++ {
 		blah := false
@@ -127,6 +128,7 @@ func FixDuplicates(thing []int) []int {
 			toret = append(toret, thing[i])
 		}
 	}
+	log4go.Debug(toret)
 	return toret
 }
 

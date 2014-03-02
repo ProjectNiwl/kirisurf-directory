@@ -14,7 +14,7 @@ import (
 
 // handle read directory request
 func ReadDirectoryHandler(w http.ResponseWriter, req *http.Request) {
-	rhost := req.Header.Get("X-Forwarded-For")
+	rhost := req.Header.Get("CF-Connecting-IP")
 	log4go.Info("Read request from %s", rhost)
 	DLock.RLock()
 	defer DLock.RUnlock()

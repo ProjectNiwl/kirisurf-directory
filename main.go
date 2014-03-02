@@ -173,6 +173,6 @@ func main() {
 	http.HandleFunc("/upload", UploadInfoHandler)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
-		panic("ListenAndServe")
+		panic(err.Error())
 	}
 }

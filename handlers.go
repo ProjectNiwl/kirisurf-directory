@@ -7,19 +7,22 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"code.google.com/p/log4go"
 
 	"code.google.com/p/go.crypto/openpgp/clearsign"
 )
 
 // handle read directory request
 func ReadDirectoryHandler(w http.ResponseWriter, req *http.Request) {
+	rhost := req.Header.Get("HTTP_CF_CONNECTING_IP")
+	log4go.Info("Read request from %s", rhost)
 	DLock.RLock()
 	defer DLock.RUnlock()
 	w.Header().Add("Content-Type", "text/plain")
 	// make our own kdirectory
-	oAdj := GetAdjacentNodes(req.RemoteAddr)
+	oAdj := GetAdjacentNodes(rhost)
 	for i := 0; i < len(KDirectory); i++ {
-		if strings.Split(KDirectory[i].Address, ":")[0] == strings.Split(req.RemoteAddr, ":")[0] {
+		if strings.Split(KDirectory[i].Address, ":")[0] == strings.Split(rhost, ":")[0] {
 			oAdj = KDirectory[i].Adjacents
 		}
 	}
@@ -62,12 +65,13 @@ func RFormatDirectoryHandler(w http.ResponseWriter, req *http.Request) {
 
 // handle upload info request
 func UploadInfoHandler(w http.ResponseWriter, req *http.Request) {
+	rhost := req.Header.Get("HTTP_CF_CONNECTING_IP")
 	req.ParseForm()
 	w.Header().Add("Content-Type", "text/plain")
 	theirport := req.Form.Get("port")
 	theirprotocol := req.Form.Get("protocol")
 	theirpkey := req.Form.Get("keyhash")
-	theirhost := strings.Join([]string{req.RemoteAddr, theirport}, "")
+	theirhost := strings.Join([]string{rhost, theirport}, "")
 	realprotoc, err := strconv.Atoi(theirprotocol)
 	if err != nil {
 		fmt.Fprintf(w, "Error encountered while uploading info:\n%s\n", err.Error())

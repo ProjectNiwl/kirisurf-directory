@@ -10,13 +10,14 @@ import (
 
 // handle long poll directory request. ONLY FOR LISTED NODES!
 func LPDirectoryHandler(w http.ResponseWriter, req *http.Request) {
+	rhost := req.Header.Get("CF-Connecting-IP")
 	DLock.RLock()
 	w.Header().Add("Content-Type", "text/plain")
 	// Assure that the node is listed
 	listed := false
 	for i := 0; i < len(KDirectory); i++ {
 		if strings.Split(KDirectory[i].Address, ":")[0] ==
-			strings.Split(req.RemoteAddr, ":")[0] {
+			strings.Split(rhost, ":")[0] {
 			listed = true
 		}
 	}

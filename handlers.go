@@ -7,9 +7,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"code.google.com/p/log4go"
 
-	"code.google.com/p/go.crypto/openpgp/clearsign"
+	"code.google.com/p/log4go"
 )
 
 // handle read directory request
@@ -37,10 +36,8 @@ func ReadDirectoryHandler(w http.ResponseWriter, req *http.Request) {
 			fDir[i].Address = "(hidden)"
 		}
 	}
-	nW, _ := clearsign.Encode(w, OurRSAKey.PrivateKey, nil)
-	defer nW.Close()
 	b, _ := json.MarshalIndent(fDir, "", "  ")
-	nW.Write(b)
+	w.Write(b)
 }
 
 func RFormatDirectoryHandler(w http.ResponseWriter, req *http.Request) {

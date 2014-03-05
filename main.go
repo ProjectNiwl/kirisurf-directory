@@ -172,8 +172,18 @@ func ReadKeys() {
 	OurRSAKey, _ = openpgp.ReadEntity(r)
 }
 
+func PublishKeys() {
+	f, e := os.Create("public.key")
+	defer f.Close()
+	if e != nil {
+		panic("cannot of savings")
+	}
+	OurRSAKey.Serialize(f)
+}
+
 func main() {
 	ReadKeys()
+	PublishKeys()
 	http.HandleFunc("/read", ReadDirectoryHandler)
 	http.HandleFunc("/longpoll", LPDirectoryHandler)
 	http.HandleFunc("/rformat", RFormatDirectoryHandler)

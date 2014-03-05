@@ -151,7 +151,7 @@ func RandomizeDirectory() {
 			fmt.Println(i)
 			fakeaddr := fmt.Sprintf("host%d:20000", i+1024)
 			AddNode(fakeaddr, "wtf", 200, true)
-			time.Sleep(time.Second / time.Duration(10*(rand.Int()%10+2)))
+			time.Sleep(time.Minute / time.Duration(10*(rand.Int()%10+2)))
 		}
 	}()
 	for i := 0; i == i; i++ {
@@ -159,7 +159,7 @@ func RandomizeDirectory() {
 		if len(KDirectory) > 0 {
 			DeleteNode(rand.Int() % len(KDirectory))
 		}
-		time.Sleep(time.Second / time.Duration(10*(rand.Int()%10+1)))
+		time.Sleep(time.Minute / time.Duration(10*(rand.Int()%10+1)))
 	}
 }
 

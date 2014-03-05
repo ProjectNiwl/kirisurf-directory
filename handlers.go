@@ -70,10 +70,15 @@ func UploadInfoHandler(w http.ResponseWriter, req *http.Request) {
 	theirpkey := req.Form.Get("keyhash")
 	theirhost := strings.Join([]string{rhost, theirport}, ":")
 	realprotoc, err := strconv.Atoi(theirprotocol)
+	isexit, err := strconv.Atoi(req.Form.Get("exit"))
 	if err != nil {
 		fmt.Fprintf(w, "Error encountered while uploading info:\n%s\n", err.Error())
 		return
 	}
+	rie := false
+	if isexit != 0 {
+		rie = true
+	}
 	//TODO: VERIFY THE DATA!!!
-	AddNode(theirhost, theirpkey, realprotoc)
+	AddNode(theirhost, theirpkey, realprotoc, rie)
 }

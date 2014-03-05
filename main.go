@@ -24,6 +24,7 @@ type KNode struct {
 	Address         string
 	ProtocolVersion int
 	Adjacents       []int
+	ExitNode        bool
 }
 
 // Mah kee
@@ -53,7 +54,7 @@ func GetAdjacentNodes(addr string) []int {
 }
 
 // Add a node to the database
-func AddNode(addr string, pkey string, pvers int) {
+func AddNode(addr string, pkey string, pvers int, isexit bool) {
 	log4go.Info("Adding %s with pkey %s and pvers %d", addr, pkey, pvers)
 	DLock.Lock()
 	defer func() {
@@ -61,7 +62,7 @@ func AddNode(addr string, pkey string, pvers int) {
 		revnum++
 	}()
 	adj := GetAdjacentNodes(addr)
-	toadd := KNode{pkey, addr, pvers, adj}
+	toadd := KNode{pkey, addr, pvers, adj, isexit}
 	KDirectory = append(KDirectory, toadd)
 	/*for i := 0; i < len(KDirectory); i++ {
 		nd := &KDirectory[i]
@@ -149,7 +150,7 @@ func RandomizeDirectory() {
 		for i := 0; i == i; i++ {
 			fmt.Println(i)
 			fakeaddr := fmt.Sprintf("host%d:20000", i+1024)
-			AddNode(fakeaddr, "wtf", 200)
+			AddNode(fakeaddr, "wtf", 200, true)
 			time.Sleep(time.Second / time.Duration(rand.Int()%10+2))
 		}
 	}()
@@ -184,6 +185,7 @@ func PublishKeys() {
 func main() {
 	ReadKeys()
 	PublishKeys()
+	go RandomizeDirectory()
 	http.HandleFunc("/read", ReadDirectoryHandler)
 	http.HandleFunc("/longpoll", LPDirectoryHandler)
 	http.HandleFunc("/rformat", RFormatDirectoryHandler)

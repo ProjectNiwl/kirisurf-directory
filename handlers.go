@@ -32,7 +32,7 @@ func ReadDirectoryHandler(w http.ResponseWriter, req *http.Request) {
 		for j := 0; j < len(oAdj); j++ {
 			contains = contains || i == oAdj[j]
 		}
-		if !contains {
+		if !contains && !fDir[i].ExitNode {
 			fDir[i].Address = "(hidden)"
 		}
 	}

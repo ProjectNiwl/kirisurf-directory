@@ -185,7 +185,6 @@ func PublishKeys() {
 func main() {
 	ReadKeys()
 	PublishKeys()
-	go RandomizeDirectory()
 	http.HandleFunc("/read", ReadDirectoryHandler)
 	http.HandleFunc("/longpoll", LPDirectoryHandler)
 	http.HandleFunc("/rformat", RFormatDirectoryHandler)

@@ -27,9 +27,14 @@ func LPDirectoryHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	// Wait until directory change happens
+	count := 100
 	crn := revnum
 	for revnum == crn {
 		time.Sleep(time.Second / 10)
+		count--
+		if count == 0 {
+			break
+		}
 	}
 	ReadDirectoryHandler(w, req)
 }

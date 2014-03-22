@@ -29,18 +29,14 @@ func lifepatrol() {
 			tgt := KDirectory[idx]
 			DLock.RUnlock()
 			fmt.Printf("Patrolling life of %s\n", tgt.Address)
-			go func() {
-				tgt := tgt
-				addr := tgt.Address
-				idx := idx
-				if is_alive(&tgt) {
-					fmt.Printf("%s is alive!\n", addr)
-				} else {
-					fmt.Printf("%s is dead!\n", addr)
-					DLock.Lock()
-					DeleteNode(idx)
-				}
-			}()
+			addr := tgt.Address
+			if is_alive(&tgt) {
+				fmt.Printf("%s is alive!\n", addr)
+			} else {
+				fmt.Printf("%s is dead!\n", addr)
+				DeleteNode(idx)
+			}
+
 		}
 		time.Sleep(time.Second * 5)
 	}

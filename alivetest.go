@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func is_alive(thing *KNode) bool {
+func is_alive(thing KNode) bool {
 	remaddr := thing.Address
 	conn, err := net.DialTimeout("tcp", remaddr, time.Second*10)
 	defer conn.Close()
@@ -30,7 +30,7 @@ func lifepatrol() {
 			DLock.RUnlock()
 			fmt.Printf("Patrolling life of %s\n", tgt.Address)
 			addr := tgt.Address
-			if is_alive(&tgt) {
+			if is_alive(tgt) {
 				fmt.Printf("%s is alive!\n", addr)
 			} else {
 				fmt.Printf("%s is dead!\n", addr)

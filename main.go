@@ -3,17 +3,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/coreos/go-log/log"
 	"hash/crc32"
 	"math/rand"
 	"net/http"
-	"os"
 	"strings"
 	"sync"
 	"time"
-
-	"code.google.com/p/go.crypto/openpgp"
-	"code.google.com/p/go.crypto/openpgp/packet"
-	"code.google.com/p/log4go"
 )
 
 var revnum = 0
@@ -26,9 +22,6 @@ type KNode struct {
 	Adjacents       []int
 	ExitNode        bool
 }
-
-// Mah kee
-var OurRSAKey *openpgp.Entity
 
 // The database itself
 var KDirectory = make([]KNode, 0)
@@ -55,12 +48,18 @@ func GetAdjacentNodes(addr string) []int {
 
 // Add a node to the database
 func AddNode(addr string, pkey string, pvers int, isexit bool) {
-	log4go.Info("Adding %s with pkey %s and pvers %d", addr, pkey, pvers)
+	log.Infof("Adding %s with pkey %s and pvers %d", addr, pkey, pvers)
 	DLock.Lock()
 	defer func() {
 		DLock.Unlock()
 		revnum++
 	}()
+	for _, ele := range KDirectory {
+		if ele.Address == addr {
+			return
+		}
+	}
+
 	adj := GetAdjacentNodes(addr)
 	toadd := KNode{pkey, addr, pvers, adj, isexit}
 	KDirectory = append(KDirectory, toadd)
@@ -119,7 +118,7 @@ func DeleteNode(idx int) {
 
 // Fixes duplicates
 func FixDuplicates(thing []int) []int {
-	log4go.Debug(thing)
+	log.Debug(thing)
 	toret := make([]int, 0)
 	for i := 0; i < len(thing); i++ {
 		blah := false
@@ -132,7 +131,7 @@ func FixDuplicates(thing []int) []int {
 			toret = append(toret, thing[i])
 		}
 	}
-	log4go.Debug(toret)
+	log.Debug(toret)
 	return toret
 }
 
@@ -163,28 +162,7 @@ func RandomizeDirectory() {
 	}
 }
 
-func ReadKeys() {
-	f, e := os.Open("private.key")
-	defer f.Close()
-	if e != nil {
-		panic("cannot of openings")
-	}
-	r := packet.NewReader(f)
-	OurRSAKey, _ = openpgp.ReadEntity(r)
-}
-
-func PublishKeys() {
-	f, e := os.Create("public.key")
-	defer f.Close()
-	if e != nil {
-		panic("cannot of savings")
-	}
-	OurRSAKey.Serialize(f)
-}
-
 func main() {
-	ReadKeys()
-	PublishKeys()
 	go lifepatrol()
 	http.HandleFunc("/read", ReadDirectoryHandler)
 	http.HandleFunc("/longpoll", LPDirectoryHandler)

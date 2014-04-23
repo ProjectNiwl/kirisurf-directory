@@ -13,7 +13,7 @@ import (
 
 // handle read directory request
 func ReadDirectoryHandler(w http.ResponseWriter, req *http.Request) {
-	rhost := req.Header.Get("CF-Connecting-IP")
+	rhost := req.Header.Get("X-Forwarded-For")
 	log.Infof("Read request from %s", rhost)
 	DLock.RLock()
 	defer DLock.RUnlock()

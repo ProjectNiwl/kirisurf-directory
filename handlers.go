@@ -62,7 +62,7 @@ func RFormatDirectoryHandler(w http.ResponseWriter, req *http.Request) {
 
 // handle upload info request
 func UploadInfoHandler(w http.ResponseWriter, req *http.Request) {
-	rhost := req.Header.Get("CF-Connecting-IP")
+	rhost := req.Header.Get("X-Forwarded-For")
 	req.ParseForm()
 	w.Header().Add("Content-Type", "text/plain")
 	theirport := req.Form.Get("port")

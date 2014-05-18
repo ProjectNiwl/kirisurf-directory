@@ -10,7 +10,7 @@ import (
 
 // handle long poll directory request. ONLY FOR LISTED NODES!
 func LPDirectoryHandler(w http.ResponseWriter, req *http.Request) {
-	rhost := req.Header.Get("CF-Connecting-IP")
+	rhost := req.Header.Get("X-Forwarded-For")
 	DLock.RLock()
 	w.Header().Add("Content-Type", "text/plain")
 	// Assure that the node is listed
